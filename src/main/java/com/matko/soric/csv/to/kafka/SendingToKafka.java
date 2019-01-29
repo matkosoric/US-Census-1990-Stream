@@ -1,3 +1,5 @@
+package com.matko.soric.csv.to.kafka;
+
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -37,8 +39,6 @@ public class SendingToKafka {
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
 
         Producer<Integer, String> producer = new KafkaProducer<Integer, String>(props);
-
-
 
         try (Stream<String> stream = Files.lines(Paths.get(location))) {
 
