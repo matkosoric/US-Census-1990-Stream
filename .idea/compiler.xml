@@ -9,5 +9,8 @@
         <module name="US-Census-1990-Stream" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="Csv-to-Kafka" target="8" />
+    </bytecodeTargetLevel>
   </component>
 </project>

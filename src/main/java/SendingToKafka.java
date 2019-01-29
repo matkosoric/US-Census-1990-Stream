@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
@@ -38,6 +39,7 @@ public class SendingToKafka {
         Producer<Integer, String> producer = new KafkaProducer<Integer, String>(props);
 
 
+
         try (Stream<String> stream = Files.lines(Paths.get(location))) {
 
             stream.skip(1).forEach(line -> {
@@ -59,7 +61,7 @@ public class SendingToKafka {
 
     private static void sendToKafka (String line, String topic, Producer producer) {
 
-//        System.out.println(topic +":  " +  line + "\\n" );
+        LOGGER.log(Level.INFO, topic +":  " +  line );
 
         ProducerRecord producerRecord = new ProducerRecord<Integer, String>(topic,
                 Integer.parseInt(line.split(",")[0]), line);
