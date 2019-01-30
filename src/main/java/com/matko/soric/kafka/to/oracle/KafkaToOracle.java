@@ -1,12 +1,19 @@
 package com.matko.soric.kafka.to.oracle;
 
+import com.matko.soric.model.CensusRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.IntegerDeserializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.apache.spark.SparkConf;
+import org.apache.spark.SparkContext;
+import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.Function;
+import org.apache.spark.sql.SparkSession;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
+import org.apache.spark.sql.RowFactory;
+import org.apache.spark.sql.SaveMode;
 import org.apache.spark.streaming.Duration;
 import org.apache.spark.streaming.api.java.JavaDStream;
 import org.apache.spark.streaming.api.java.JavaInputDStream;
@@ -24,8 +31,18 @@ public class KafkaToOracle {
         Logger.getLogger("org").setLevel(Level.OFF);
         Logger.getLogger("akka").setLevel(Level.OFF);
 
-        SparkConf conf = new SparkConf().setAppName("Kafka to Oracle").setMaster("local[*]");
-        JavaStreamingContext ssc = new JavaStreamingContext(conf, new Duration(1000));
+        Properties connectionProperties = new Properties();
+        connectionProperties.put("user", "postgres");
+        connectionProperties.put("password", "matko");
+
+        SparkSession spark = SparkSession
+                .builder()
+                .master("local[*]")
+                .appName("Spark KtO")
+                .getOrCreate();
+
+        JavaSparkContext ctx = JavaSparkContext.fromSparkContext(SparkContext.getOrCreate());
+        JavaStreamingContext jsc = new JavaStreamingContext(ctx, new Duration(10000));
 
         Map<String, Object> kafkaParams = new HashMap<>();
         kafkaParams.put("bootstrap.servers", "localhost:9092");
@@ -39,12 +56,12 @@ public class KafkaToOracle {
 
         JavaInputDStream<ConsumerRecord<String, String>> stream =
                 KafkaUtils.createDirectStream(
-                        ssc,
+                        jsc,
                         LocationStrategies.PreferConsistent(),
                         ConsumerStrategies.<String, String>Subscribe(topics, kafkaParams)
                 );
 
-        JavaDStream<CensusRecord> lines = stream.map(new Function<ConsumerRecord<String,String>, CensusRecord>() {
+        JavaDStream<CensusRecord> censusRecordJavaDStream = stream.map(new Function<ConsumerRecord<String,String>, CensusRecord>() {
             @Override
             public CensusRecord call(ConsumerRecord<String, String> kafkaRecord) throws Exception {
 
@@ -71,14 +88,22 @@ public class KafkaToOracle {
             }
         });
 
-//        lines.foreachRDD(rdd -> System.out.println(rdd));
+        censusRecordJavaDStream.map(e -> {
+            Row row = RowFactory.create(e.getAllValues());
+            return row;
+        }).foreachRDD(rdd -> {
+            Dataset<Row> censusDataSet = spark.createDataFrame(rdd, CensusRecord.getStructType());
 
-        lines.print(10);
+            censusDataSet
+                    .write()
+                    .mode(SaveMode.Append)
+                    .jdbc("jdbc:postgresql:postgres", "census.census", connectionProperties);
+        });
 
+        censusRecordJavaDStream.print(10);
 
-
-        ssc.start();
-        ssc.awaitTermination();
+        jsc.start();
+        jsc.awaitTermination();
 
     }
 
