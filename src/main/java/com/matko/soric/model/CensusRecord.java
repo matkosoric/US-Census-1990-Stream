@@ -1,4 +1,8 @@
-package com.matko.soric.kafka.to.oracle;
+package com.matko.soric.model;
+
+import org.apache.spark.sql.types.DataTypes;
+import org.apache.spark.sql.types.StructField;
+import org.apache.spark.sql.types.StructType;
 
 import java.io.Serializable;
 
@@ -773,4 +777,90 @@ public class CensusRecord implements Serializable {
                 ", dYrsserv=" + dYrsserv +
                 '}';
     }
+
+
+
+
+    private static StructType structType = DataTypes.createStructType(new StructField[] {
+            DataTypes.createStructField("caseid", DataTypes.IntegerType, false),
+            DataTypes.createStructField("dAge", DataTypes.IntegerType, false),
+            DataTypes.createStructField("dAncstry1", DataTypes.IntegerType, false),
+            DataTypes.createStructField("dAncstry2", DataTypes.IntegerType, false),
+            DataTypes.createStructField("iAvail", DataTypes.IntegerType, false),
+            DataTypes.createStructField("iCitizen", DataTypes.IntegerType, false),
+            DataTypes.createStructField("iClass", DataTypes.IntegerType, false),
+            DataTypes.createStructField("dDepart", DataTypes.IntegerType, false),
+            DataTypes.createStructField("iDisabl1", DataTypes.IntegerType, false),
+            DataTypes.createStructField("iDisabl2", DataTypes.IntegerType, false),
+            DataTypes.createStructField("iEnglish", DataTypes.IntegerType, false),
+            DataTypes.createStructField("iFeb55", DataTypes.IntegerType, false),
+            DataTypes.createStructField("iFertil", DataTypes.IntegerType, false),
+            DataTypes.createStructField("dHispanic", DataTypes.IntegerType, false),
+            DataTypes.createStructField("dHour89", DataTypes.IntegerType, false),
+            DataTypes.createStructField("dHours", DataTypes.IntegerType, false),
+            DataTypes.createStructField("iImmigr", DataTypes.IntegerType, false),
+            DataTypes.createStructField("dIncome1", DataTypes.IntegerType, false),
+            DataTypes.createStructField("dIncome2", DataTypes.IntegerType, false),
+            DataTypes.createStructField("dIncome3", DataTypes.IntegerType, false),
+            DataTypes.createStructField("dIncome4", DataTypes.IntegerType, false),
+            DataTypes.createStructField("dIncome5", DataTypes.IntegerType, false),
+            DataTypes.createStructField("dIncome6", DataTypes.IntegerType, false),
+            DataTypes.createStructField("dIncome7", DataTypes.IntegerType, false),
+            DataTypes.createStructField("dIncome8", DataTypes.IntegerType, false),
+            DataTypes.createStructField("dIndustry", DataTypes.IntegerType, false),
+            DataTypes.createStructField("iKorean",DataTypes.IntegerType,false),
+            DataTypes.createStructField("iLang1", DataTypes.IntegerType, false),
+            DataTypes.createStructField("iLooking", DataTypes.IntegerType, false),
+            DataTypes.createStructField("iMarital", DataTypes.IntegerType, false),
+            DataTypes.createStructField("iMay75880", DataTypes.IntegerType, false),
+            DataTypes.createStructField("iMeans", DataTypes.IntegerType, false),
+            DataTypes.createStructField("iMilitary", DataTypes.IntegerType, false),
+            DataTypes.createStructField("iMobility", DataTypes.IntegerType, false),
+            DataTypes.createStructField("iMobillim", DataTypes.IntegerType, false),
+            DataTypes.createStructField("dOccup", DataTypes.IntegerType, false),
+            DataTypes.createStructField("iOthrserv", DataTypes.IntegerType, false),
+            DataTypes.createStructField("iPerscare", DataTypes.IntegerType, false),
+            DataTypes.createStructField("dPOB", DataTypes.IntegerType, false),
+            DataTypes.createStructField("dPoverty", DataTypes.IntegerType, false),
+            DataTypes.createStructField("dPwgt1", DataTypes.IntegerType, false),
+            DataTypes.createStructField("iRagechld", DataTypes.IntegerType, false),
+            DataTypes.createStructField("dRearning", DataTypes.IntegerType, false),
+            DataTypes.createStructField("iRelat1", DataTypes.IntegerType, false),
+            DataTypes.createStructField("iRelat2", DataTypes.IntegerType, false),
+            DataTypes.createStructField("iRemplpar", DataTypes.IntegerType, false),
+            DataTypes.createStructField("iRiders", DataTypes.IntegerType, false),
+            DataTypes.createStructField("iRlabor", DataTypes.IntegerType, false),
+            DataTypes.createStructField("iRownchld", DataTypes.IntegerType, false),
+            DataTypes.createStructField("dRpincome", DataTypes.IntegerType, false),
+            DataTypes.createStructField("iRPOB", DataTypes.IntegerType, false),
+            DataTypes.createStructField("iRrelchld", DataTypes.IntegerType, false),
+            DataTypes.createStructField("iRspouse", DataTypes.IntegerType, false),
+            DataTypes.createStructField("iRvetserv", DataTypes.IntegerType, false),
+            DataTypes.createStructField("iSchool", DataTypes.IntegerType, false),
+            DataTypes.createStructField("iSept80", DataTypes.IntegerType, false),
+            DataTypes.createStructField("iSex", DataTypes.IntegerType, false),
+            DataTypes.createStructField("iSubfam1", DataTypes.IntegerType, false),
+            DataTypes.createStructField("iSubfam2", DataTypes.IntegerType, false),
+            DataTypes.createStructField("iTmpabsnt", DataTypes.IntegerType, false),
+            DataTypes.createStructField("dTravtime", DataTypes.IntegerType, false),
+            DataTypes.createStructField("iVietnam", DataTypes.IntegerType, false),
+            DataTypes.createStructField("dWeek89", DataTypes.IntegerType, false),
+            DataTypes.createStructField("iWork89", DataTypes.IntegerType, false),
+            DataTypes.createStructField("iWorklwk", DataTypes.IntegerType, false),
+            DataTypes.createStructField("iWWII", DataTypes.IntegerType, false),
+            DataTypes.createStructField("iYearsch", DataTypes.IntegerType, false),
+            DataTypes.createStructField("iYearwrk", DataTypes.IntegerType, false),
+            DataTypes.createStructField("dYrsserv", DataTypes.IntegerType, false)
+    });
+
+    public static StructType getStructType() {
+        return structType;
+    }
+
+    public Object[] getAllValues() {
+        return new Object[]{caseid, dAge, dAncstry1, dAncstry2, iAvail, iCitizen, iClass, dDepart, iDisabl1, iDisabl2, iEnglish, iFeb55, iFertil, dHispanic, dHour89, dHours, iImmigr, dIncome1, dIncome2, dIncome3, dIncome4, dIncome5, dIncome6, dIncome7, dIncome8, dIndustry, iKorean, iLang1, iLooking, iMarital, iMay75880, iMeans, iMilitary, iMobility, iMobillim, dOccup, iOthrserv, iPerscare, dPOB, dPoverty, dPwgt1, iRagechld, dRearning, iRelat1, iRelat2, iRemplpar, iRiders, iRlabor, iRownchld, dRpincome, iRPOB, iRrelchld, iRspouse, iRvetserv, iSchool, iSept80, iSex, iSubfam1, iSubfam2, iTmpabsnt, dTravtime, iVietnam, dWeek89, iWork89, iWorklwk, iWWII, iYearsch, iYearwrk, dYrsserv};
+    }
+
+
+
 }
