@@ -1,6 +1,7 @@
-package com.matko.soric.kafka.to.oracle;
+package com.matko.soric.kafka.to.postgres.and.mongo;
 
 import com.matko.soric.model.CensusRecord;
+import com.mongodb.spark.MongoSpark;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.IntegerDeserializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -21,10 +22,11 @@ import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.streaming.kafka010.ConsumerStrategies;
 import org.apache.spark.streaming.kafka010.KafkaUtils;
 import org.apache.spark.streaming.kafka010.LocationStrategies;
+import com.mongodb.spark.sql.*;
 
 import java.util.*;
 
-public class KafkaToOracle {
+public class KafkaToPostgresAndMongo {
 
     public static void main(String[] args) throws Exception {
 
@@ -38,7 +40,12 @@ public class KafkaToOracle {
         SparkSession spark = SparkSession
                 .builder()
                 .master("local[*]")
-                .appName("Spark KtO")
+                .appName("Spark Kafka to Postgres and Mongo")
+                .config("spark.mongodb.output.uri", "mongodb://127.0.0.1:27017/")
+                .config("spark.mongodb.output.database", "us-census")
+                .config("spark.mongodb.output.collection", "year1990")
+                .config("spark.mongodb.output.maxBatchSize", "1024")
+
                 .getOrCreate();
 
         JavaSparkContext ctx = JavaSparkContext.fromSparkContext(SparkContext.getOrCreate());
@@ -52,7 +59,7 @@ public class KafkaToOracle {
         kafkaParams.put("auto.offset.reset", "earliest");
         kafkaParams.put("enable.auto.commit", false);
 
-        Collection<String> topics = Arrays.asList("us-census-male");
+        Collection<String> topics = Arrays.asList("us-census-male", "us-census-female");
 
         JavaInputDStream<ConsumerRecord<String, String>> stream =
                 KafkaUtils.createDirectStream(
@@ -92,18 +99,26 @@ public class KafkaToOracle {
             Row row = RowFactory.create(e.getAllValues());
             return row;
         }).foreachRDD(rdd -> {
+
             Dataset<Row> censusDataSet = spark.createDataFrame(rdd, CensusRecord.getStructType());
+            MongoSpark.save(censusDataSet);
+
+            rdd.filter(row -> row.getLong(56) == 0);
 
             censusDataSet
                     .write()
                     .mode(SaveMode.Append)
                     .jdbc("jdbc:postgresql:postgres", "census.census", connectionProperties);
+
+
         });
 
         censusRecordJavaDStream.print(10);
 
         jsc.start();
         jsc.awaitTermination();
+        jsc.close();
+
 
     }
 
