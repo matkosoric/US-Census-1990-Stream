@@ -24,8 +24,8 @@ public class SendingToKafka {
 
     public static void main(String[] args) {
 
-        String location = "src/main/resources/USCensus1990.data.txt";
-//        String location = "src/main/resources/sample.csv";
+//        String location = "src/main/resources/USCensus1990.data.txt";
+        String location = "src/main/resources/sample.csv";
 
         Properties props = new Properties();
         props.put("bootstrap.servers", "localhost:9092");
