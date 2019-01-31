@@ -8,13 +8,12 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.spark.SparkContext;
+import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.Function;
-import org.apache.spark.sql.SparkSession;
-import org.apache.spark.sql.Dataset;
-import org.apache.spark.sql.Row;
-import org.apache.spark.sql.RowFactory;
-import org.apache.spark.sql.SaveMode;
+import org.apache.spark.sql.*;
+import org.apache.spark.sql.expressions.UserDefinedFunction;
+import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.streaming.Duration;
 import org.apache.spark.streaming.api.java.JavaDStream;
 import org.apache.spark.streaming.api.java.JavaInputDStream;
@@ -22,9 +21,10 @@ import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.streaming.kafka010.ConsumerStrategies;
 import org.apache.spark.streaming.kafka010.KafkaUtils;
 import org.apache.spark.streaming.kafka010.LocationStrategies;
-import com.mongodb.spark.sql.*;
 
 import java.util.*;
+
+import static org.apache.spark.sql.functions.*;
 
 public class KafkaToPostgresAndMongo {
 
@@ -45,8 +45,8 @@ public class KafkaToPostgresAndMongo {
                 .config("spark.mongodb.output.database", "us-census")
                 .config("spark.mongodb.output.collection", "year1990")
                 .config("spark.mongodb.output.maxBatchSize", "1024")
-
                 .getOrCreate();
+
 
         JavaSparkContext ctx = JavaSparkContext.fromSparkContext(SparkContext.getOrCreate());
         JavaStreamingContext jsc = new JavaStreamingContext(ctx, new Duration(10000));
@@ -101,16 +101,15 @@ public class KafkaToPostgresAndMongo {
         }).foreachRDD(rdd -> {
 
             Dataset<Row> censusDataSet = spark.createDataFrame(rdd, CensusRecord.getStructType());
-            MongoSpark.save(censusDataSet);
+            Dataset<Row> decodedCensusDataSet = decodeCensusData (censusDataSet);
+            MongoSpark.save(decodedCensusDataSet);
 
-            rdd.filter(row -> row.getLong(56) == 0);
-
-            censusDataSet
+            JavaRDD malesRdd = rdd.filter(row -> row.getInt(56) == 0);
+            Dataset<Row> censusDataSetMales = spark.createDataFrame(malesRdd, CensusRecord.getStructType());
+            censusDataSetMales
                     .write()
                     .mode(SaveMode.Append)
                     .jdbc("jdbc:postgresql:postgres", "census.census", connectionProperties);
-
-
         });
 
         censusRecordJavaDStream.print(10);
@@ -119,6 +118,36 @@ public class KafkaToPostgresAndMongo {
         jsc.awaitTermination();
         jsc.close();
 
+
+    }
+
+
+    static UserDefinedFunction mapAge = udf( (ageCode) -> {
+                String resultRange = "undefined";
+                Integer age = (Integer)ageCode;
+                switch (age) {
+                    case 1 : resultRange = "1-12"; break;
+                    case 2 : resultRange = "13-19"; break;
+                    case 3 : resultRange = "20-29"; break;
+                    case 4 : resultRange = "30-39"; break;
+                    case 5 : resultRange = "40-49"; break;
+                    case 6 : resultRange = "50-64"; break;
+                    case 7 : resultRange = ">=65"; break;
+                }
+
+                return resultRange;
+            },
+            DataTypes.StringType);
+
+
+    public static Dataset decodeCensusData (Dataset originalDataSet) {
+
+        Dataset decodedCensusData = originalDataSet
+                .withColumn("iMarital", when (col("iMarital").equalTo(0), "No").otherwise("Yes"))
+                .withColumn("iSex", when(col("iSex").equalTo(0), "Male").otherwise("Female"))
+                .withColumn("dAge", mapAge.apply(col("dAge"))
+                );
+            return decodedCensusData;
 
     }
 
