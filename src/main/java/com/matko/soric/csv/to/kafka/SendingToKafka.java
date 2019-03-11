@@ -7,6 +7,7 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
@@ -22,10 +23,10 @@ public class SendingToKafka {
     private static final Logger LOGGER = Logger.getLogger(SendingToKafka.class.getName());
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args)throws IOException {
 
-//        String location = "src/main/resources/USCensus1990.data.txt";
         String location = "src/main/resources/sample.csv";
+//        String location = "src/main/resources/census-data/";
 
         Properties props = new Properties();
         props.put("bootstrap.servers", "localhost:9092");
@@ -40,24 +41,29 @@ public class SendingToKafka {
 
         Producer<Integer, String> producer = new KafkaProducer<Integer, String>(props);
 
-        try (Stream<String> stream = Files.lines(Paths.get(location))) {
-
-            stream.skip(1).forEach(line -> {
-
-                        if (Integer.parseInt(line.split(",")[56]) == 0) {
-                            sendToKafka (line, TOPIC_MALE, producer);
-                        } else {
-                            sendToKafka (line, TOPIC_FEMALE, producer);
-                        }
-                    }
-            );
-
-        } catch (IOException e) {
-            e.printStackTrace();
+        try (Stream<Path> paths = Files.walk(Paths.get(location))) {
+            paths
+                    .filter(Files::isRegularFile)
+                    .forEach( file -> {
+                                try (Stream<String> stream = Files.lines( file)) {
+                                    stream.skip(1).forEach(line -> {
+                                                if (Integer.parseInt(line.split(",")[56]) == 0) {
+                                                    sendToKafka (line, TOPIC_MALE, producer);
+                                                } else {
+                                                    sendToKafka (line, TOPIC_FEMALE, producer);
+                                                }
+                                            }
+                                    );
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                    );
         }
 
-    }
 
+
+    }
 
     private static void sendToKafka (String line, String topic, Producer producer) {
 
