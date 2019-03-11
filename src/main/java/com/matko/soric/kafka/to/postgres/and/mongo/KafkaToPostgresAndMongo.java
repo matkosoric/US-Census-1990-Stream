@@ -22,6 +22,9 @@ import org.apache.spark.streaming.kafka010.ConsumerStrategies;
 import org.apache.spark.streaming.kafka010.KafkaUtils;
 import org.apache.spark.streaming.kafka010.LocationStrategies;
 
+import org.elasticsearch.spark.streaming.api.java.JavaEsSparkStreaming;
+
+
 import java.util.*;
 
 import static org.apache.spark.sql.functions.*;
@@ -45,6 +48,11 @@ public class KafkaToPostgresAndMongo {
                 .config("spark.mongodb.output.database", "us-census")
                 .config("spark.mongodb.output.collection", "year1990")
                 .config("spark.mongodb.output.maxBatchSize", "1024")
+//                .config("es.index.auto.create", "true")
+//                .config("es.nodes","localhost")
+//                .config("es.port","9200")
+//                .config("es.write.operation", "upsert")
+//                .config("es.mapping.id", "UUID")
                 .getOrCreate();
 
 
@@ -90,7 +98,6 @@ public class KafkaToPostgresAndMongo {
                                                                     parameters[56], parameters[57], parameters[58], parameters[59], parameters[60], parameters[61], parameters[62],
                                                                     parameters[63], parameters[64], parameters[65], parameters[66], parameters[67], parameters[68]);
 
-
                 return currentCensusRecord;
             }
         });
@@ -113,6 +120,8 @@ public class KafkaToPostgresAndMongo {
         });
 
         censusRecordJavaDStream.print(10);
+
+//        JavaEsSparkStreaming.saveToEs(censusRecordJavaDStream, "census/us1990");
 
         jsc.start();
         jsc.awaitTermination();

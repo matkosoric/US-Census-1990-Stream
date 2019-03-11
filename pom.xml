@@ -79,6 +79,11 @@
             <version>${spark.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.elasticsearch</groupId>
+            <artifactId>elasticsearch-spark-20_2.11</artifactId>
+            <version>6.3.0</version>
+        </dependency>
 
     </dependencies>
 
