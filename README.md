@@ -5,7 +5,7 @@ Initial data is in csv file.
 Kafka producer takes it and sends it to a local instance of Kafka, creating two different topics (us-census-male and us-census-female), depending on the gender code.
 Spark Streaming application reads both topics, and splits the stream. One branch goes to PostgreSQL, and the other to MongoDB.
 Some columns (like gender, age, etc.) are transformed from codes to original values, and passed along to MongoDB.
-MongoDB contails records from both topics, male and female.
+MongoDB contains records from both topics, male and female.
 PostgreSQL gets only raw data from a male topic.
 
 
