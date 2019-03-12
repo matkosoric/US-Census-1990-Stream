@@ -1,4 +1,4 @@
-package com.matko.soric.csv.to.kafka;
+package com.matko.soric.kafka.producer;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;

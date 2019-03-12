@@ -1,4 +1,4 @@
-package com.matko.soric.kafka.to.postgres.and.mongo;
+package com.matko.soric.kafka.consumer;
 
 import com.matko.soric.model.CensusRecord;
 import com.mongodb.spark.MongoSpark;
@@ -43,7 +43,7 @@ public class KafkaToPostgresAndMongo {
         SparkSession spark = SparkSession
                 .builder()
                 .master("local[*]")
-                .appName("Spark Kafka to Postgres and Mongo")
+                .appName("Spark Kafka to Postgre, Mongo, and ElasticSearch")
                 .config("spark.mongodb.output.uri", "mongodb://127.0.0.1:27017/")
                 .config("spark.mongodb.output.database", "us-census")
                 .config("spark.mongodb.output.collection", "year1990")
