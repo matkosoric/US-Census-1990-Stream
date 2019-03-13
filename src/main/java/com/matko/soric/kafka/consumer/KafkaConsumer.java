@@ -21,15 +21,18 @@ import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.streaming.kafka010.ConsumerStrategies;
 import org.apache.spark.streaming.kafka010.KafkaUtils;
 import org.apache.spark.streaming.kafka010.LocationStrategies;
+import org.elasticsearch.spark.sql.api.java.JavaEsSparkSQL;
 
-import org.elasticsearch.spark.streaming.api.java.JavaEsSparkStreaming;
-
-
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static org.apache.spark.sql.functions.*;
 
-public class KafkaToPostgresAndMongo {
+public class KafkaConsumer {
+
+    private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss");
+
 
     public static void main(String[] args) throws Exception {
 
@@ -43,16 +46,16 @@ public class KafkaToPostgresAndMongo {
         SparkSession spark = SparkSession
                 .builder()
                 .master("local[*]")
-                .appName("Spark Kafka to Postgre, Mongo, and ElasticSearch")
+                .appName("Spark Kafka to Postgres, Mongo, and ElasticSearch")
                 .config("spark.mongodb.output.uri", "mongodb://127.0.0.1:27017/")
                 .config("spark.mongodb.output.database", "us-census")
                 .config("spark.mongodb.output.collection", "year1990")
                 .config("spark.mongodb.output.maxBatchSize", "1024")
-//                .config("es.index.auto.create", "true")
-//                .config("es.nodes","localhost")
-//                .config("es.port","9200")
-//                .config("es.write.operation", "upsert")
-//                .config("es.mapping.id", "UUID")
+                .config("es.index.auto.create", "true")
+                .config("es.mapping.id", "caseid")
+                .config("es.nodes","localhost")
+                .config("es.port","9200")
+                .config("es.write.operation", "index")
                 .getOrCreate();
 
 
@@ -75,6 +78,7 @@ public class KafkaToPostgresAndMongo {
                         LocationStrategies.PreferConsistent(),
                         ConsumerStrategies.<String, String>Subscribe(topics, kafkaParams)
                 );
+
 
         JavaDStream<CensusRecord> censusRecordJavaDStream = stream.map(new Function<ConsumerRecord<String,String>, CensusRecord>() {
             @Override
@@ -107,10 +111,17 @@ public class KafkaToPostgresAndMongo {
             return row;
         }).foreachRDD(rdd -> {
 
+            // Mongo - decoded data
             Dataset<Row> censusDataSet = spark.createDataFrame(rdd, CensusRecord.getStructType());
             Dataset<Row> decodedCensusDataSet = decodeCensusData (censusDataSet);
             MongoSpark.save(decodedCensusDataSet);
 
+            // ElasticSearch
+            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+            JavaEsSparkSQL.saveToEs(decodedCensusDataSet.withColumn("time_stamp", lit(timestamp)), "census/us1990");
+            System.out.println(timestamp);
+
+            // Postgres - coded data - male only
             JavaRDD malesRdd = rdd.filter(row -> row.getInt(56) == 0);
             Dataset<Row> censusDataSetMales = spark.createDataFrame(malesRdd, CensusRecord.getStructType());
             censusDataSetMales
@@ -119,14 +130,12 @@ public class KafkaToPostgresAndMongo {
                     .jdbc("jdbc:postgresql:postgres", "census.census", connectionProperties);
         });
 
-        censusRecordJavaDStream.print(10);
 
-//        JavaEsSparkStreaming.saveToEs(censusRecordJavaDStream, "census/us1990");
+        censusRecordJavaDStream.print(10);
 
         jsc.start();
         jsc.awaitTermination();
         jsc.close();
-
 
     }
 

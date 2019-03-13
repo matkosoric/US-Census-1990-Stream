@@ -1,6 +1,5 @@
 package com.matko.soric.kafka.producer;
 
-import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -15,18 +14,18 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
-public class SendingToKafka {
+public class KafkaProducer {
 
     private final static String TOPIC_MALE = "us-census-male";
     private final static String TOPIC_FEMALE = "us-census-female";
 
-    private static final Logger LOGGER = Logger.getLogger(SendingToKafka.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(KafkaProducer.class.getName());
 
 
     public static void main(String[] args)throws IOException {
 
-        String location = "src/main/resources/sample.csv";
-//        String location = "src/main/resources/census-data/";
+//        String location = "src/main/resources/sample.csv";
+        String location = "src/main/resources/census-data/";
 
         Properties props = new Properties();
         props.put("bootstrap.servers", "localhost:9092");
@@ -39,7 +38,7 @@ public class SendingToKafka {
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.IntegerSerializer");
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
 
-        Producer<Integer, String> producer = new KafkaProducer<Integer, String>(props);
+        Producer<Integer, String> producer = new org.apache.kafka.clients.producer.KafkaProducer(props);
 
         try (Stream<Path> paths = Files.walk(Paths.get(location))) {
             paths
