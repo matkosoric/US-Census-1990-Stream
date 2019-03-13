@@ -7,7 +7,7 @@ import org.apache.spark.sql.types.StructType;
 import java.io.Serializable;
 
 public class CensusRecord implements Serializable {
-    public CensusRecord(Integer caseid, Integer dAge, Integer dAncstry1, Integer dAncstry2, Integer iAvail, Integer iCitizen, Integer iClass, Integer dDepart, Integer iDisabl1, Integer iDisabl2, Integer iEnglish, Integer iFeb55, Integer iFertil, Integer dHispanic, Integer dHour89, Integer dHours, Integer iImmigr, Integer dIncome1, Integer dIncome2, Integer dIncome3, Integer dIncome4, Integer dIncome5, Integer dIncome6, Integer dIncome7, Integer dIncome8, Integer dIndustry, Integer iKorean, Integer iLang1, Integer iLooking, Integer iMarital, Integer iMay75880, Integer iMeans, Integer iMilitary, Integer iMobility, Integer iMobillim, Integer dOccup, Integer iOthrserv, Integer iPerscare, Integer dPOB, Integer dPoverty, Integer dPwgt1, Integer iRagechld, Integer dRearning, Integer iRelat1, Integer iRelat2, Integer iRemplpar, Integer iRiders, Integer iRlabor, Integer iRownchld, Integer dRpincome, Integer iRPOB, Integer iRrelchld, Integer iRspouse, Integer iRvetserv, Integer iSchool, Integer iSept80, Integer iSex, Integer iSubfam1, Integer iSubfam2, Integer iTmpabsnt, Integer dTravtime, Integer iVietnam, Integer dWeek89, Integer iWork89, Integer iWorklwk, Integer iWWII, Integer iYearsch, Integer iYearwrk, Integer dYrsserv) {
+    public CensusRecord(Integer caseid, Integer dAge, Integer dAncstry1, Integer dAncstry2, Integer iAvail, Integer iCitizen, Integer iClass, Integer dDepart, Integer iDisabl1, Integer iDisabl2, Integer iEnglish, Integer iFeb55, Integer iFertil, Integer dHispanic, Integer dHour89, Integer dHours, Integer iImmigr, Integer dIncome1, Integer dIncome2, Integer dIncome3, Integer dIncome4, Integer dIncome5, Integer dIncome6, Integer dIncome7, Integer dIncome8, Integer dIndustry, Integer iKorean, Integer iLang1, Integer iLooking, Integer iMarital, Integer iMay75880, Integer iMeans, Integer iMilitary, Integer iMobility, Integer iMobillim, Integer dOccup, Integer iOthrserv, Integer iPerscare, Integer dPOB, Integer dPoverty, Integer dPwgt1, Integer iRagechld, Integer dRearning, Integer iRelat1, Integer iRelat2, Integer iRemplpar, Integer iRiders, Integer iRlabor, Integer iRownchld, Integer dRpincome, Integer iRPOB, Integer iRrelchld, Integer iRspouse, Integer iRvetserv, Integer iSchool, Integer iSept80, Integer iSex, Integer iSubfam1, Integer iSubfam2, Integer iTmpabsnt, Integer dTravtime, Integer iVietnam, Integer dWeek89, Integer iWork89, Integer iWorklwk, Integer iWWII, Integer iYearsch, Integer iYearwrk, Integer dYrsserv, Integer timestamp) {
         this.caseid = caseid;
         this.dAge = dAge;
         this.dAncstry1 = dAncstry1;
@@ -77,6 +77,7 @@ public class CensusRecord implements Serializable {
         this.iYearsch = iYearsch;
         this.iYearwrk = iYearwrk;
         this.dYrsserv = dYrsserv;
+        this.timestamp = timestamp;
     }
 
     private Integer caseid;
@@ -633,6 +634,19 @@ public class CensusRecord implements Serializable {
         this.dYrsserv = dYrsserv;
     }
 
+    public static void setStructType(StructType structType) {
+        CensusRecord.structType = structType;
+    }
+
+    public Integer getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Integer timestamp) {
+        this.timestamp = timestamp;
+    }
+
+
     private Integer dAge;
     private Integer dAncstry1;
     private Integer dAncstry2;
@@ -701,7 +715,7 @@ public class CensusRecord implements Serializable {
     private Integer iYearsch;
     private Integer iYearwrk;
     private Integer dYrsserv;
-
+    private Integer timestamp;
 
     @Override
     public String toString() {
@@ -775,6 +789,7 @@ public class CensusRecord implements Serializable {
                 ", iYearsch=" + iYearsch +
                 ", iYearwrk=" + iYearwrk +
                 ", dYrsserv=" + dYrsserv +
+                ", timestamp =" + timestamp +
                 '}';
     }
 
@@ -850,7 +865,9 @@ public class CensusRecord implements Serializable {
             DataTypes.createStructField("iWWII", DataTypes.IntegerType, false),
             DataTypes.createStructField("iYearsch", DataTypes.IntegerType, false),
             DataTypes.createStructField("iYearwrk", DataTypes.IntegerType, false),
-            DataTypes.createStructField("dYrsserv", DataTypes.IntegerType, false)
+            DataTypes.createStructField("dYrsserv", DataTypes.IntegerType, false),
+            DataTypes.createStructField("timestamp", DataTypes.IntegerType, false)
+
     });
 
     public static StructType getStructType() {
@@ -858,7 +875,7 @@ public class CensusRecord implements Serializable {
     }
 
     public Object[] getAllValues() {
-        return new Object[]{caseid, dAge, dAncstry1, dAncstry2, iAvail, iCitizen, iClass, dDepart, iDisabl1, iDisabl2, iEnglish, iFeb55, iFertil, dHispanic, dHour89, dHours, iImmigr, dIncome1, dIncome2, dIncome3, dIncome4, dIncome5, dIncome6, dIncome7, dIncome8, dIndustry, iKorean, iLang1, iLooking, iMarital, iMay75880, iMeans, iMilitary, iMobility, iMobillim, dOccup, iOthrserv, iPerscare, dPOB, dPoverty, dPwgt1, iRagechld, dRearning, iRelat1, iRelat2, iRemplpar, iRiders, iRlabor, iRownchld, dRpincome, iRPOB, iRrelchld, iRspouse, iRvetserv, iSchool, iSept80, iSex, iSubfam1, iSubfam2, iTmpabsnt, dTravtime, iVietnam, dWeek89, iWork89, iWorklwk, iWWII, iYearsch, iYearwrk, dYrsserv};
+        return new Object[]{caseid, dAge, dAncstry1, dAncstry2, iAvail, iCitizen, iClass, dDepart, iDisabl1, iDisabl2, iEnglish, iFeb55, iFertil, dHispanic, dHour89, dHours, iImmigr, dIncome1, dIncome2, dIncome3, dIncome4, dIncome5, dIncome6, dIncome7, dIncome8, dIndustry, iKorean, iLang1, iLooking, iMarital, iMay75880, iMeans, iMilitary, iMobility, iMobillim, dOccup, iOthrserv, iPerscare, dPOB, dPoverty, dPwgt1, iRagechld, dRearning, iRelat1, iRelat2, iRemplpar, iRiders, iRlabor, iRownchld, dRpincome, iRPOB, iRrelchld, iRspouse, iRvetserv, iSchool, iSept80, iSex, iSubfam1, iSubfam2, iTmpabsnt, dTravtime, iVietnam, dWeek89, iWork89, iWorklwk, iWWII, iYearsch, iYearwrk, dYrsserv, timestamp};
     }
 
 

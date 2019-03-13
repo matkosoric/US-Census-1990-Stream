@@ -8,6 +8,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
@@ -18,6 +21,8 @@ public class KafkaProducer {
 
     private final static String TOPIC_MALE = "us-census-male";
     private final static String TOPIC_FEMALE = "us-census-female";
+
+    private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss");
 
     private static final Logger LOGGER = Logger.getLogger(KafkaProducer.class.getName());
 
@@ -46,10 +51,14 @@ public class KafkaProducer {
                     .forEach( file -> {
                                 try (Stream<String> stream = Files.lines( file)) {
                                     stream.skip(1).forEach(line -> {
-                                                if (Integer.parseInt(line.split(",")[56]) == 0) {
-                                                    sendToKafka (line, TOPIC_MALE, producer);
+
+                                        Instant instant = Instant.now();
+                                        long timeStampMillis = instant.toEpochMilli();
+
+                                        if (Integer.parseInt(line.split(",")[56]) == 0) {
+                                                    sendToKafka (line + "," + timeStampMillis, TOPIC_MALE, producer);
                                                 } else {
-                                                    sendToKafka (line, TOPIC_FEMALE, producer);
+                                                    sendToKafka (line + "," + timeStampMillis, TOPIC_FEMALE, producer);
                                                 }
                                             }
                                     );
@@ -59,8 +68,6 @@ public class KafkaProducer {
                             }
                     );
         }
-
-
 
     }
 
