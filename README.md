@@ -25,7 +25,10 @@ Code mappings are here:
 [Spark Spreaming 2.4.0](https://spark.apache.org/docs/2.4.0/streaming-programming-guide.html)  
 [Kafka 2.1](https://kafka.apache.org/downloads)  
 [PostgreSQL 10.6](https://www.postgresql.org/docs/10/release-10-6.html)  
-[MongoDB 4.0.5](https://docs.mongodb.com/manual/release-notes/4.0/)
+[MongoDB 4.0.5](https://docs.mongodb.com/manual/release-notes/4.0/)  
+[ElasticSearch](https://www.elastic.co/guide/en/elasticsearch/reference/current/release-notes-6.6.1.html)
+[Grafana 5.4.3](http://docs.grafana.org/guides/whats-new-in-v5-4/)
+
 
 
 ### Results
