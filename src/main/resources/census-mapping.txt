@@ -1,0 +1,241 @@
+PUT census
+{
+    "settings" : {
+        "number_of_shards" : 1
+    },
+    "mapping": {
+    "us1990": {
+      "properties": {
+        "caseid": {
+          "type": "long"
+        },
+        "dAge": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "dAncstry1": {
+          "type": "long"
+        },
+        "dAncstry2": {
+          "type": "long"
+        },
+        "dDepart": {
+          "type": "long"
+        },
+        "dHispanic": {
+          "type": "long"
+        },
+        "dHour89": {
+          "type": "long"
+        },
+        "dHours": {
+          "type": "long"
+        },
+        "dIncome1": {
+          "type": "long"
+        },
+        "dIncome2": {
+          "type": "long"
+        },
+        "dIncome3": {
+          "type": "long"
+        },
+        "dIncome4": {
+          "type": "long"
+        },
+        "dIncome5": {
+          "type": "long"
+        },
+        "dIncome6": {
+          "type": "long"
+        },
+        "dIncome7": {
+          "type": "long"
+        },
+        "dIncome8": {
+          "type": "long"
+        },
+        "dIndustry": {
+          "type": "long"
+        },
+        "dOccup": {
+          "type": "long"
+        },
+        "dPOB": {
+          "type": "long"
+        },
+        "dPoverty": {
+          "type": "long"
+        },
+        "dPwgt1": {
+          "type": "long"
+        },
+        "dRearning": {
+          "type": "long"
+        },
+        "dRpincome": {
+          "type": "long"
+        },
+        "dTravtime": {
+          "type": "long"
+        },
+        "dWeek89": {
+          "type": "long"
+        },
+        "dYrsserv": {
+          "type": "long"
+        },
+        "iAvail": {
+          "type": "long"
+        },
+        "iCitizen": {
+          "type": "long"
+        },
+        "iClass": {
+          "type": "long"
+        },
+        "iDisabl1": {
+          "type": "long"
+        },
+        "iDisabl2": {
+          "type": "long"
+        },
+        "iEnglish": {
+          "type": "long"
+        },
+        "iFeb55": {
+          "type": "long"
+        },
+        "iFertil": {
+          "type": "long"
+        },
+        "iImmigr": {
+          "type": "long"
+        },
+        "iKorean": {
+          "type": "long"
+        },
+        "iLang1": {
+          "type": "long"
+        },
+        "iLooking": {
+          "type": "long"
+        },
+        "iMarital": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "iMay75880": {
+          "type": "long"
+        },
+        "iMeans": {
+          "type": "long"
+        },
+        "iMilitary": {
+          "type": "long"
+        },
+        "iMobility": {
+          "type": "long"
+        },
+        "iMobillim": {
+          "type": "long"
+        },
+        "iOthrserv": {
+          "type": "long"
+        },
+        "iPerscare": {
+          "type": "long"
+        },
+        "iRPOB": {
+          "type": "long"
+        },
+        "iRagechld": {
+          "type": "long"
+        },
+        "iRelat1": {
+          "type": "long"
+        },
+        "iRelat2": {
+          "type": "long"
+        },
+        "iRemplpar": {
+          "type": "long"
+        },
+        "iRiders": {
+          "type": "long"
+        },
+        "iRlabor": {
+          "type": "long"
+        },
+        "iRownchld": {
+          "type": "long"
+        },
+        "iRrelchld": {
+          "type": "long"
+        },
+        "iRspouse": {
+          "type": "long"
+        },
+        "iRvetserv": {
+          "type": "long"
+        },
+        "iSchool": {
+          "type": "long"
+        },
+        "iSept80": {
+          "type": "long"
+        },
+        "iSex": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "iSubfam1": {
+          "type": "long"
+        },
+        "iSubfam2": {
+          "type": "long"
+        },
+        "iTmpabsnt": {
+          "type": "long"
+        },
+        "iVietnam": {
+          "type": "long"
+        },
+        "iWWII": {
+          "type": "long"
+        },
+        "iWork89": {
+          "type": "long"
+        },
+        "iWorklwk": {
+          "type": "long"
+        },
+        "iYearsch": {
+          "type": "long"
+        },
+        "iYearwrk": {
+          "type": "long"
+        },
+         "timestamp": {
+             "type": "date",
+             "format": "epoch_millis"
+         }
+      }
+    }
+  }
+}
