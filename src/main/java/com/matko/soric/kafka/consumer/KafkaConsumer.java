@@ -31,9 +31,6 @@ import static org.apache.spark.sql.functions.*;
 
 public class KafkaConsumer {
 
-//    private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss");
-
-
     public static void main(String[] args) throws Exception {
 
         Logger.getLogger("org").setLevel(Level.OFF);
@@ -84,15 +81,14 @@ public class KafkaConsumer {
             @Override
             public CensusRecord call(ConsumerRecord<String, String> kafkaRecord) throws Exception {
 
-//                Date parsedDate = sdf.parse(kafkaRecord.value().split(",")[69]);
-//                Timestamp timestamp = new java.sql.Timestamp(parsedDate.getTime());
+                Long timestamp = Long.parseLong(kafkaRecord.value().split(",")[69]);
 
-                Integer[] parameters=new Integer[kafkaRecord.value().split(",").length];
+                Integer[] parameters=new Integer[kafkaRecord.value().split(",").length - 1];
                 int i=0;
                 for(String str : kafkaRecord.value().split(",")){
-//                    if (i < parameters.length) {
+                    if (i < parameters.length) {
                         parameters[i]=Integer.parseInt(str);
-//                    }
+                    }
                     i++;
                 }
 
@@ -105,7 +101,7 @@ public class KafkaConsumer {
                                                                     parameters[42], parameters[43], parameters[44], parameters[45], parameters[46], parameters[47], parameters[48],
                                                                     parameters[49], parameters[50], parameters[51], parameters[52], parameters[53], parameters[54], parameters[55],
                                                                     parameters[56], parameters[57], parameters[58], parameters[59], parameters[60], parameters[61], parameters[62],
-                                                                    parameters[63], parameters[64], parameters[65], parameters[66], parameters[67], parameters[68], parameters[69]);
+                                                                    parameters[63], parameters[64], parameters[65], parameters[66], parameters[67], parameters[68], timestamp);
 
                 return currentCensusRecord;
             }
@@ -122,10 +118,7 @@ public class KafkaConsumer {
             MongoSpark.save(decodedCensusDataSet);
 
             // ElasticSearch
-//            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-//            JavaEsSparkSQL.saveToEs(decodedCensusDataSet.withColumn("time_stamp", lit(timestamp)), "census/us1990");
             JavaEsSparkSQL.saveToEs(decodedCensusDataSet, "census/us1990");
-//            System.out.println(timestamp);
 
             // Postgres - coded data - male only
             JavaRDD malesRdd = rdd.filter(row -> row.getInt(56) == 0);

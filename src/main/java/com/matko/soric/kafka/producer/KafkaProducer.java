@@ -8,8 +8,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
@@ -21,8 +19,6 @@ public class KafkaProducer {
 
     private final static String TOPIC_MALE = "us-census-male";
     private final static String TOPIC_FEMALE = "us-census-female";
-
-    private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss");
 
     private static final Logger LOGGER = Logger.getLogger(KafkaProducer.class.getName());
 

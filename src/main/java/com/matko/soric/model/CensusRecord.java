@@ -7,7 +7,7 @@ import org.apache.spark.sql.types.StructType;
 import java.io.Serializable;
 
 public class CensusRecord implements Serializable {
-    public CensusRecord(Integer caseid, Integer dAge, Integer dAncstry1, Integer dAncstry2, Integer iAvail, Integer iCitizen, Integer iClass, Integer dDepart, Integer iDisabl1, Integer iDisabl2, Integer iEnglish, Integer iFeb55, Integer iFertil, Integer dHispanic, Integer dHour89, Integer dHours, Integer iImmigr, Integer dIncome1, Integer dIncome2, Integer dIncome3, Integer dIncome4, Integer dIncome5, Integer dIncome6, Integer dIncome7, Integer dIncome8, Integer dIndustry, Integer iKorean, Integer iLang1, Integer iLooking, Integer iMarital, Integer iMay75880, Integer iMeans, Integer iMilitary, Integer iMobility, Integer iMobillim, Integer dOccup, Integer iOthrserv, Integer iPerscare, Integer dPOB, Integer dPoverty, Integer dPwgt1, Integer iRagechld, Integer dRearning, Integer iRelat1, Integer iRelat2, Integer iRemplpar, Integer iRiders, Integer iRlabor, Integer iRownchld, Integer dRpincome, Integer iRPOB, Integer iRrelchld, Integer iRspouse, Integer iRvetserv, Integer iSchool, Integer iSept80, Integer iSex, Integer iSubfam1, Integer iSubfam2, Integer iTmpabsnt, Integer dTravtime, Integer iVietnam, Integer dWeek89, Integer iWork89, Integer iWorklwk, Integer iWWII, Integer iYearsch, Integer iYearwrk, Integer dYrsserv, Integer timestamp) {
+    public CensusRecord(Integer caseid, Integer dAge, Integer dAncstry1, Integer dAncstry2, Integer iAvail, Integer iCitizen, Integer iClass, Integer dDepart, Integer iDisabl1, Integer iDisabl2, Integer iEnglish, Integer iFeb55, Integer iFertil, Integer dHispanic, Integer dHour89, Integer dHours, Integer iImmigr, Integer dIncome1, Integer dIncome2, Integer dIncome3, Integer dIncome4, Integer dIncome5, Integer dIncome6, Integer dIncome7, Integer dIncome8, Integer dIndustry, Integer iKorean, Integer iLang1, Integer iLooking, Integer iMarital, Integer iMay75880, Integer iMeans, Integer iMilitary, Integer iMobility, Integer iMobillim, Integer dOccup, Integer iOthrserv, Integer iPerscare, Integer dPOB, Integer dPoverty, Integer dPwgt1, Integer iRagechld, Integer dRearning, Integer iRelat1, Integer iRelat2, Integer iRemplpar, Integer iRiders, Integer iRlabor, Integer iRownchld, Integer dRpincome, Integer iRPOB, Integer iRrelchld, Integer iRspouse, Integer iRvetserv, Integer iSchool, Integer iSept80, Integer iSex, Integer iSubfam1, Integer iSubfam2, Integer iTmpabsnt, Integer dTravtime, Integer iVietnam, Integer dWeek89, Integer iWork89, Integer iWorklwk, Integer iWWII, Integer iYearsch, Integer iYearwrk, Integer dYrsserv, Long timestamp) {
         this.caseid = caseid;
         this.dAge = dAge;
         this.dAncstry1 = dAncstry1;
@@ -638,11 +638,11 @@ public class CensusRecord implements Serializable {
         CensusRecord.structType = structType;
     }
 
-    public Integer getTimestamp() {
+    public Long getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Integer timestamp) {
+    public void setTimestamp(Long timestamp) {
         this.timestamp = timestamp;
     }
 
@@ -715,7 +715,7 @@ public class CensusRecord implements Serializable {
     private Integer iYearsch;
     private Integer iYearwrk;
     private Integer dYrsserv;
-    private Integer timestamp;
+    private Long timestamp;
 
     @Override
     public String toString() {
@@ -866,7 +866,7 @@ public class CensusRecord implements Serializable {
             DataTypes.createStructField("iYearsch", DataTypes.IntegerType, false),
             DataTypes.createStructField("iYearwrk", DataTypes.IntegerType, false),
             DataTypes.createStructField("dYrsserv", DataTypes.IntegerType, false),
-            DataTypes.createStructField("timestamp", DataTypes.IntegerType, false)
+            DataTypes.createStructField("timestamp", DataTypes.LongType, false)
 
     });
 
