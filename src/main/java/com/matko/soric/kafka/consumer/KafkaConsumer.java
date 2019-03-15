@@ -23,8 +23,6 @@ import org.apache.spark.streaming.kafka010.KafkaUtils;
 import org.apache.spark.streaming.kafka010.LocationStrategies;
 import org.elasticsearch.spark.sql.api.java.JavaEsSparkSQL;
 
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static org.apache.spark.sql.functions.*;
