@@ -16,7 +16,7 @@ Grafana is connected to ElasticSearch and Postgres for monitoring.
 ### Dataset
 
 I downloaded the dataset from UCI Machine Learning Repository.
-Data contains only codes, so each column is a numeric type.
+Original data without enriching contains only codes, so each column is a numeric type.
 Uncompressed csv file has about 360 MB.  
 [US Census Data (1990)](https://archive.ics.uci.edu/ml/machine-learning-databases/census1990-mld/)
 
@@ -30,14 +30,20 @@ Code mappings are here:
 [Kafka 2.1](https://kafka.apache.org/downloads)  
 [PostgreSQL 10.6](https://www.postgresql.org/docs/10/release-10-6.html)  
 [MongoDB 4.0.5](https://docs.mongodb.com/manual/release-notes/4.0/)  
-[ElasticSearch 6.6.3](https://www.elastic.co/guide/en/elasticsearch/reference/current/release-notes-6.6.1.html)
+[ElasticSearch 6.6.3](https://www.elastic.co/guide/en/elasticsearch/reference/current/release-notes-6.6.1.html)  
 [Grafana 5.4.3](http://docs.grafana.org/guides/whats-new-in-v5-4/)
 
 
 ### Results
 
+##### Grafana screenshot
+![grafana - Matko Soric](https://raw.githubusercontent.com/matkosoric/US-Census-1990-Stream/master/src/main/resources/grafana.png?raw=true "Grafana - Matko Sorić")
 
+##### ElasticSearch & Kibana screenshot
+![ElasticSearch & Kibana  - Matko Soric](https://raw.githubusercontent.com/matkosoric/US-Census-1990-Stream/master/src/main/resources/elasticsearch.png?raw=true "ElasticSearch & Kibana  - Matko Sorić")
 
 ##### Mongo screenshot
 ![MongoDB - Matko Soric](https://raw.githubusercontent.com/matkosoric/US-Census-1990-Stream/master/src/main/resources/mongo_compass.png?raw=true "MongoDB - Matko Sorić")
 
+##### Postgres screenshot
+![Postgres - Matko Soric](https://raw.githubusercontent.com/matkosoric/US-Census-1990-Stream/master/src/main/resources/postgres.png?raw=true "postgres - Matko Sorić")
